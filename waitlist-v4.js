@@ -40,14 +40,21 @@ window.addEventListener("load", () => {
     const status = form.querySelector(".wl-status");
     submit.disabled = true; submit.textContent = "در حال ثبت…"; status.className = "wl-status";
     try {
-      const data = Object.fromEntries(new FormData(form));
-      const response = await fetch("/api/waitlist", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data) });
-      const result = await response.json();
+      const fieldValue = (name) => form.querySelector(`[name="${name}"]`)?.value || "";
+      const data = { name:fieldValue("name"), phone:fieldValue("phone"), business:fieldValue("business"), email:fieldValue("email"), website:fieldValue("website") };
+      const response = await fetch(`${window.location.origin}/api/waitlist`, { method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(data) });
+      const responseText = await response.text();
+      let result = {};
+      try { result = JSON.parse(responseText); } catch { result = {}; }
       if (!response.ok) throw new Error(result.error || "خطا در ثبت اطلاعات");
       form.reset();
       status.textContent = "عالی شد! به لیست انتظار آی‌دیپ اضافه شدید. هنگام راه‌اندازی، کد تخفیف ۷۰٪ را برایتان ارسال می‌کنیم.";
       status.className = "wl-status ok";
-    } catch (error) { status.textContent = error.message; status.className = "wl-status error"; }
+    } catch (error) {
+      const safeMessages = ["لطفاً نام، شماره تماس و حوزه کسب‌وکار را وارد کنید.", "تعداد درخواست‌ها زیاد است؛ چند دقیقه دیگر دوباره تلاش کنید.", "ثبت‌نام موقتاً در دسترس نیست.", "ارسال انجام نشد؛ لطفاً دوباره تلاش کنید."];
+      status.textContent = safeMessages.includes(error.message) ? error.message : "ارتباط با سرور برقرار نشد؛ لطفاً دوباره تلاش کنید.";
+      status.className = "wl-status error";
+    }
     finally { submit.disabled = false; submit.textContent = "ثبت‌نام در لیست انتظار"; }
   });
   }, 0);
