@@ -1,7 +1,7 @@
 window.addEventListener("load", () => {
   setTimeout(() => {
   const style = document.createElement("style");
-  style.textContent = `.wl-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px)}.wl-modal.is-open{display:flex}.wl-card{position:relative;width:min(100%,560px);max-height:92vh;overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:32px;background:linear-gradient(145deg,#111827,#171238);box-shadow:0 30px 100px rgba(79,70,229,.3);direction:rtl;color:#fff}.wl-close{position:absolute;left:18px;top:16px;border:0;background:transparent;color:#94a3b8;font-size:30px;cursor:pointer}.wl-card h2{font-size:28px;font-weight:900;margin:0 0 10px}.wl-card>p{color:#cbd5e1;line-height:1.9;margin:0 0 22px}.wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wl-field{display:flex;flex-direction:column;gap:7px}.wl-field.full{grid-column:1/-1}.wl-field label{font-size:13px;color:#cbd5e1}.wl-field input{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 14px;background:rgba(255,255,255,.06);color:#fff;outline:none}.wl-field input:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.16)}.wl-submit{width:100%;margin-top:18px;border:0;border-radius:13px;padding:14px;background:linear-gradient(90deg,#6366f1,#d946ef);color:#fff;font-weight:800;cursor:pointer}.wl-submit:disabled{opacity:.65;cursor:wait}.wl-note{margin-top:12px!important;font-size:12px;color:#94a3b8!important;text-align:center}.wl-status{display:none;margin-top:14px!important;padding:12px;border-radius:12px;text-align:center}.wl-status.ok{display:block;background:rgba(16,185,129,.13);color:#6ee7b7!important}.wl-status.error{display:block;background:rgba(244,63,94,.13);color:#fda4af!important}.wl-honeypot{position:absolute!important;left:-9999px!important}@media(max-width:560px){.wl-card{padding:28px 20px}.wl-grid{grid-template-columns:1fr}.wl-field.full{grid-column:auto}}`;
+  style.textContent = `.wl-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px);overflow-x:hidden;box-sizing:border-box}.wl-modal *{box-sizing:border-box}.wl-modal.is-open{display:flex}.wl-card{position:relative;width:min(100%,560px);max-width:560px;max-height:92vh;overflow-y:auto;overflow-x:hidden;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:32px;background:linear-gradient(145deg,#111827,#171238);box-shadow:0 30px 100px rgba(79,70,229,.3);direction:rtl;color:#fff}.wl-close{position:absolute;left:18px;top:16px;border:0;background:transparent;color:#94a3b8;font-size:30px;cursor:pointer}.wl-card h2{font-size:28px;font-weight:900;margin:0 0 10px}.wl-card>p{color:#cbd5e1;line-height:1.9;margin:0 0 22px}.wl-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;min-width:0}.wl-field{display:flex;flex-direction:column;gap:7px;min-width:0}.wl-field.full{grid-column:1/-1}.wl-field label{font-size:13px;color:#cbd5e1}.wl-field input{display:block;width:100%;max-width:100%;min-width:0;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 14px;background:rgba(255,255,255,.06);color:#fff;outline:none}.wl-field input:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.16)}.wl-submit{width:100%;margin-top:18px;border:0;border-radius:13px;padding:14px;background:linear-gradient(90deg,#6366f1,#d946ef);color:#fff;font-weight:800;cursor:pointer}.wl-submit:disabled{opacity:.65;cursor:wait}.wl-note{margin-top:12px!important;font-size:12px;color:#94a3b8!important;text-align:center}.wl-status{display:none;margin-top:14px!important;padding:12px;border-radius:12px;text-align:center}.wl-status.ok{display:block;background:rgba(16,185,129,.13);color:#6ee7b7!important}.wl-status.error{display:block;background:rgba(244,63,94,.13);color:#fda4af!important}.wl-honeypot{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;border:0!important;opacity:0!important;clip-path:inset(50%)!important;pointer-events:none!important}.wl-modal-open{overflow:hidden!important}@media(max-width:560px){.wl-modal{padding:12px}.wl-card{padding:28px 20px}.wl-grid{grid-template-columns:minmax(0,1fr)}.wl-field.full{grid-column:auto}}`;
   document.head.appendChild(style);
 
   const modal = document.createElement("div");
@@ -14,10 +14,10 @@ window.addEventListener("load", () => {
   const open = () => {
     if (!modal.isConnected) document.body.appendChild(modal);
     modal.classList.add("is-open");
-    document.body.style.overflow = "hidden";
+    document.documentElement.classList.add("wl-modal-open");
     setTimeout(() => modal.querySelector("input").focus(), 50);
   };
-  const close = () => { modal.classList.remove("is-open"); document.body.style.overflow = ""; };
+  const close = () => { modal.classList.remove("is-open"); document.documentElement.classList.remove("wl-modal-open"); };
   modal.querySelector(".wl-close").addEventListener("click", close);
   modal.addEventListener("click", (event) => { if (event.target === modal) close(); });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
@@ -26,6 +26,7 @@ window.addEventListener("load", () => {
   document.addEventListener("click", (event) => {
     const trigger = event.target.closest("button,a");
     if (!trigger) return;
+    if (trigger.closest(".wl-modal")) return;
     const label = trigger.textContent.trim();
     const href = trigger.getAttribute("href") || "";
     if (!/پیوستن به لیست انتظار|دریافت ۷۰٪ تخفیف|لیست انتظار/.test(label)) return;
