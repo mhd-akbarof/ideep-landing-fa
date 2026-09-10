@@ -10,25 +10,32 @@ const requests = new Map();
 const mimeTypes = { ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8", ".css":"text/css; charset=utf-8", ".json":"application/json; charset=utf-8", ".png":"image/png", ".jpg":"image/jpeg", ".jpeg":"image/jpeg", ".svg":"image/svg+xml", ".ico":"image/x-icon", ".txt":"text/plain; charset=utf-8" };
 
 function sendJson(response, status, data) { response.writeHead(status, { "Content-Type":"application/json; charset=utf-8" }); response.end(JSON.stringify(data)); }
-function clean(value, max = 120) { return String(value || "").trim().replace(/[<>]/g, "").slice(0, max); }
+function clean(value, max = 120) {
+  return String(value || "")
+    .replace(/[\u0000-\u001F\u007F<>]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
+}
 function isRateLimited(request) {
   const ip = String(request.headers["x-forwarded-for"] || request.socket.remoteAddress).split(",")[0].trim();
   const now = Date.now();
-  const recent = (requests.get(ip) || []).filter((time) => now - time < 3600000);
-  recent.push(now); requests.set(ip, recent);
-  return recent.length > 5;
+  const recent = (requests.get(ip) || []).filter((time) => now - time < 600000);
+  requests.set(ip, recent);
+  if (recent.length >= 10) return true;
+  recent.push(now);
+  return false;
 }
 
 async function handleWaitlist(request, response) {
-  if (isRateLimited(request)) return sendJson(response, 429, { error:"لطفاً کمی بعد دوباره تلاش کنید." });
   let raw = "";
   for await (const chunk of request) { raw += chunk; if (raw.length > 10000) return sendJson(response, 413, { error:"درخواست بیش از حد بزرگ است." }); }
   let body;
   try { body = JSON.parse(raw); } catch { return sendJson(response, 400, { error:"اطلاعات فرم معتبر نیست." }); }
   if (body.website) return sendJson(response, 200, { ok:true });
   const name=clean(body.name,80), phone=clean(body.phone,30), business=clean(body.business), email=clean(body.email);
-  if (!name || !business || !/^09\d{9}$/.test(phone.replace(/[\s-]/g,""))) return sendJson(response,400,{error:"نام، حوزه کسب‌وکار و شماره موبایل معتبر الزامی است."});
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return sendJson(response,400,{error:"آدرس ایمیل معتبر نیست."});
+  if (!name || !phone || !business) return sendJson(response,400,{error:"لطفاً نام، شماره تماس و حوزه کسب‌وکار را وارد کنید."});
+  if (isRateLimited(request)) return sendJson(response,429,{error:"تعداد درخواست‌ها زیاد است؛ چند دقیقه دیگر دوباره تلاش کنید."});
   if (!token || !chatId) { console.error("Missing Telegram environment variables"); return sendJson(response,503,{error:"ثبت‌نام موقتاً در دسترس نیست."}); }
   const message=["🚀 عضو جدید لیست انتظار iDeep","",`نام: ${name}`,`موبایل: ${phone}`,`کسب‌وکار: ${business}`,`ایمیل: ${email || "وارد نشده"}`,"پیشنهاد: ۷۰٪ تخفیف اولین خرید هر پلن"].join("\n");
   try {
