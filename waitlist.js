@@ -1,4 +1,5 @@
-(() => {
+window.addEventListener("load", () => {
+  setTimeout(() => {
   const style = document.createElement("style");
   style.textContent = `.wl-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px)}.wl-modal.is-open{display:flex}.wl-card{position:relative;width:min(100%,560px);max-height:92vh;overflow:auto;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:32px;background:linear-gradient(145deg,#111827,#171238);box-shadow:0 30px 100px rgba(79,70,229,.3);direction:rtl;color:#fff}.wl-close{position:absolute;left:18px;top:16px;border:0;background:transparent;color:#94a3b8;font-size:30px;cursor:pointer}.wl-card h2{font-size:28px;font-weight:900;margin:0 0 10px}.wl-card>p{color:#cbd5e1;line-height:1.9;margin:0 0 22px}.wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wl-field{display:flex;flex-direction:column;gap:7px}.wl-field.full{grid-column:1/-1}.wl-field label{font-size:13px;color:#cbd5e1}.wl-field input{width:100%;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 14px;background:rgba(255,255,255,.06);color:#fff;outline:none}.wl-field input:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.16)}.wl-submit{width:100%;margin-top:18px;border:0;border-radius:13px;padding:14px;background:linear-gradient(90deg,#6366f1,#d946ef);color:#fff;font-weight:800;cursor:pointer}.wl-submit:disabled{opacity:.65;cursor:wait}.wl-note{margin-top:12px!important;font-size:12px;color:#94a3b8!important;text-align:center}.wl-status{display:none;margin-top:14px!important;padding:12px;border-radius:12px;text-align:center}.wl-status.ok{display:block;background:rgba(16,185,129,.13);color:#6ee7b7!important}.wl-status.error{display:block;background:rgba(244,63,94,.13);color:#fda4af!important}.wl-honeypot{position:absolute!important;left:-9999px!important}@media(max-width:560px){.wl-card{padding:28px 20px}.wl-grid{grid-template-columns:1fr}.wl-field.full{grid-column:auto}}`;
   document.head.appendChild(style);
@@ -10,40 +11,24 @@
   modal.innerHTML = `<div class="wl-card"><button class="wl-close" type="button" aria-label="بستن">×</button><h2>به جمع اولین کاربران آی‌دیپ بپیوندید</h2><p>اوایل پاییز ۱۴۰۵، پیش از رونمایی عمومی به شما خبر می‌دهیم و ۷۰٪ تخفیف اولین خرید هر پلن را برایتان ارسال می‌کنیم.</p><form><div class="wl-grid"><div class="wl-field"><label>نام و نام خانوادگی</label><input name="name" autocomplete="name" required></div><div class="wl-field"><label>شماره موبایل</label><input name="phone" inputmode="tel" autocomplete="tel" placeholder="09123456789" required></div><div class="wl-field full"><label>حوزه کسب‌وکار</label><input name="business" placeholder="مثلاً فروشگاه پوشاک" required></div><div class="wl-field full"><label>ایمیل (اختیاری)</label><input name="email" type="email" autocomplete="email" placeholder="name@example.com"></div><input class="wl-honeypot" name="website" tabindex="-1" autocomplete="off"></div><button class="wl-submit" type="submit">ثبت‌نام در لیست انتظار</button><p class="wl-note">اطلاعات شما فقط برای اطلاع‌رسانی زمان راه‌اندازی استفاده می‌شود.</p><p class="wl-status" aria-live="polite"></p></form></div>`;
   document.body.appendChild(modal);
 
-  const open = () => { modal.classList.add("is-open"); document.body.style.overflow = "hidden"; setTimeout(() => modal.querySelector("input").focus(), 50); };
+  const open = () => {
+    if (!modal.isConnected) document.body.appendChild(modal);
+    modal.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => modal.querySelector("input").focus(), 50);
+  };
   const close = () => { modal.classList.remove("is-open"); document.body.style.overflow = ""; };
   modal.querySelector(".wl-close").addEventListener("click", close);
   modal.addEventListener("click", (event) => { if (event.target === modal) close(); });
   document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+  window.addEventListener("open-waitlist", open);
 
-  const updatePage = () => {
-    const hero = document.querySelector("h1");
-    if (hero) hero.innerHTML = '<span class="neon-text animate-gradient">محتوای کسب‌وکارت،</span><br><span class="text-white">بدون دردسر همیشگی</span>';
-    const copy = hero?.nextElementSibling;
-    if (copy) copy.textContent = "آی‌دیپ به کسب‌وکارهای کوچک کمک می‌کند بدون استخدام تیم محتوا، برای شبکه‌های اجتماعی ایده بسازند، محتوا تولید کنند و انتشار آن را مدیریت کنند.";
-    document.querySelectorAll('a[href="#faq"]').forEach((item) => item.remove());
-    document.querySelectorAll('a[href="#pricing"]').forEach((item) => { item.textContent = "دسترسی زودهنگام"; item.href = "#waitlist"; });
-    const pricing = document.querySelector("#pricing");
-    if (pricing) pricing.style.display = "none";
-    const fakeMetric = [...document.querySelectorAll("div")].find((item) => item.textContent.trim() === "پست‌های تولیدشده با AI");
-    const metrics = fakeMetric?.closest(".mt-20");
-    if (metrics) metrics.style.display = "none";
-    [...document.querySelectorAll("p")].filter((item) => item.textContent.includes("هزاران برند ایرانی و بین‌المللی")).forEach((item) => {
-      item.textContent = "به جمع اولین کاربران آی‌دیپ بپیوندید و ۷۰٪ تخفیف اولین خرید هر پلن را دریافت کنید.";
-    });
-    document.querySelectorAll("button").forEach((button) => {
-      const value = button.textContent.trim();
-      if (/شروع کنید|ثبت‌نام رایگان|مشاهده تعرفه‌ها|انتخاب پلن|داشبورد|ورود/.test(value)) {
-        button.textContent = value.includes("مشاهده") ? "دریافت ۷۰٪ تخفیف اولین خرید" : "پیوستن به لیست انتظار";
-        button.dataset.waitlist = "true";
-      }
-    });
-  };
-  updatePage();
-  setTimeout(updatePage, 800);
   document.addEventListener("click", (event) => {
-    const trigger = event.target.closest('[data-waitlist="true"],a[href="#waitlist"]');
+    const trigger = event.target.closest("button,a");
     if (!trigger) return;
+    const label = trigger.textContent.trim();
+    const href = trigger.getAttribute("href") || "";
+    if (!/پیوستن به لیست انتظار|دریافت ۷۰٪ تخفیف|لیست انتظار/.test(label)) return;
     event.preventDefault(); event.stopPropagation(); open();
   }, true);
 
@@ -64,4 +49,5 @@
     } catch (error) { status.textContent = error.message; status.className = "wl-status error"; }
     finally { submit.disabled = false; submit.textContent = "ثبت‌نام در لیست انتظار"; }
   });
-})();
+  }, 0);
+});

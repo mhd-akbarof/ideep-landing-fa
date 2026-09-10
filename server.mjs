@@ -47,17 +47,6 @@ async function serveStatic(request,response) {
   try { const info=await stat(filePath); if(info.isDirectory()) filePath=join(filePath,"index.html"); } catch { if(!extname(filePath)) filePath += ".html"; }
   try {
     let content=await readFile(filePath); const extension=extname(filePath).toLowerCase();
-    if(extension === ".html") {
-      let html=content.toString();
-      const replacements=[
-        ["iDeep | تولید محتوای شبکه های اجتماعی","iDeep | دستیار هوشمند محتوای کسب‌وکارهای کوچک"],
-        ["تولید محتوا، انتشار خودکار و مدیریت شبکه‌های اجتماعی با هوش مصنوعی.","آی‌دیپ، دستیار هوشمند تولید و مدیریت محتوای شبکه‌های اجتماعی برای کسب‌وکارهای کوچک؛ در راه برای پاییز ۱۴۰۵."],
-        ["نسل جدید مدیریت شبکه‌های اجتماعی با هوش مصنوعی","در راه برای اوایل پاییز ۱۴۰۵"],
-        ["هزاران برند ایرانی و بین‌المللی، مدیریت شبکه‌های اجتماعی خود را به iDeep سپرده‌اند. نوبت شماست.","به جمع اولین کاربران آی‌دیپ بپیوندید و ۷۰٪ تخفیف اولین خرید هر پلن را دریافت کنید."],
-      ];
-      for(const [from,to] of replacements) html=html.split(from).join(to);
-      content=Buffer.from(html.replace("</body>",'<script src="/waitlist.js" defer></script></body>'));
-    }
     response.writeHead(200,{"Content-Type":mimeTypes[extension]||"application/octet-stream","Cache-Control":pathname.startsWith("/_next/static/")?"public, max-age=31536000, immutable":"no-cache"});
     if(request.method === "HEAD") return response.end(); response.end(content);
   } catch { const notFound=await readFile(join(publicDir,"404.html")); response.writeHead(404,{"Content-Type":"text/html; charset=utf-8"}); response.end(notFound); }
