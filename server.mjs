@@ -48,6 +48,25 @@ async function handleWaitlist(request, response) {
   } catch (error) { console.error(error); return sendJson(response,502,{error:"ارسال انجام نشد؛ لطفاً دوباره تلاش کنید."}); }
 }
 
+async function handleContact(request, response) {
+  let raw = "";
+  for await (const chunk of request) { raw += chunk; if (raw.length > 10000) return sendJson(response, 413, { error:"درخواست بیش از حد بزرگ است." }); }
+  let body;
+  try { body = JSON.parse(raw); } catch { return sendJson(response, 400, { error:"اطلاعات فرم معتبر نیست." }); }
+  if (body.website) return sendJson(response, 200, { ok:true });
+  const name=clean(body.name,80), phone=clean(body.phone,30), message=clean(body.message,1000);
+  if (!name || !phone || !message) return sendJson(response,400,{error:"لطفاً نام، شماره تماس و پیام را وارد کنید."});
+  if (!/^(?:\+98|0098|98|0)?9\d{9}$/.test(phone.replace(/[\s-]/g,""))) return sendJson(response,400,{error:"شماره موبایل معتبر نیست."});
+  if (isRateLimited(request)) return sendJson(response,429,{error:"تعداد درخواست‌ها زیاد است؛ چند دقیقه دیگر دوباره تلاش کنید."});
+  if (!token || !chatId) return sendJson(response,503,{error:"فرم تماس موقتاً در دسترس نیست."});
+  const telegramMessage=["💬 پیام جدید تماس با iDeep","",`نام: ${name}`,`موبایل: ${phone}`,"",message].join("\n");
+  try {
+    const result=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:chatId,text:telegramMessage}),signal:AbortSignal.timeout(8000)});
+    if (!result.ok) { const detail=await result.text(); throw new Error(`Telegram returned ${result.status}: ${detail.slice(0,300)}`); }
+    return sendJson(response,201,{ok:true});
+  } catch (error) { console.error("Contact submission failed",error); return sendJson(response,502,{error:"ارسال پیام انجام نشد؛ لطفاً دوباره تلاش کنید."}); }
+}
+
 async function serveStatic(request,response) {
   const url=new URL(request.url,"http://localhost");
   let pathname=decodeURIComponent(url.pathname); if(pathname.endsWith("/")) pathname += "index.html";
@@ -64,6 +83,7 @@ async function serveStatic(request,response) {
 
 createServer(async (request,response)=>{
   if(request.method === "POST" && request.url === "/api/waitlist") return handleWaitlist(request,response);
+  if(request.method === "POST" && request.url === "/api/contact") return handleContact(request,response);
   if(request.method !== "GET" && request.method !== "HEAD") { response.writeHead(405).end(); return; }
   return serveStatic(request,response);
 }).listen(port,"0.0.0.0",()=>console.log(`iDeep listening on ${port}`));
