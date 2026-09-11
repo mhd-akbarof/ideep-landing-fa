@@ -1,67 +1,30 @@
-window.addEventListener("load", () => {
-  setTimeout(() => {
-  const style = document.createElement("style");
-  style.textContent = `.wl-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px);overflow-x:hidden;box-sizing:border-box}.wl-modal *{box-sizing:border-box}.wl-modal.is-open{display:flex}.wl-card{position:relative;width:min(100%,560px);max-width:560px;max-height:92vh;overflow-y:auto;overflow-x:hidden;border:1px solid rgba(255,255,255,.12);border-radius:28px;padding:32px;background:linear-gradient(145deg,#111827,#171238);box-shadow:0 30px 100px rgba(79,70,229,.3);direction:rtl;color:#fff}.wl-close{position:absolute;left:18px;top:16px;border:0;background:transparent;color:#94a3b8;font-size:30px;cursor:pointer}.wl-card h2{font-size:28px;font-weight:900;margin:0 0 10px}.wl-card>p{color:#cbd5e1;line-height:1.9;margin:0 0 22px}.wl-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;min-width:0}.wl-field{display:flex;flex-direction:column;gap:7px;min-width:0}.wl-field.full{grid-column:1/-1}.wl-field label{font-size:13px;color:#cbd5e1}.wl-field input{display:block;width:100%;max-width:100%;min-width:0;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:13px 14px;background:rgba(255,255,255,.06);color:#fff;outline:none}.wl-field input:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.16)}.wl-submit{width:100%;margin-top:18px;border:0;border-radius:13px;padding:14px;background:linear-gradient(90deg,#6366f1,#d946ef);color:#fff;font-weight:800;cursor:pointer}.wl-submit:disabled{opacity:.65;cursor:wait}.wl-note{margin-top:12px!important;font-size:12px;color:#94a3b8!important;text-align:center}.wl-status{display:none;margin-top:14px!important;padding:12px;border-radius:12px;text-align:center}.wl-status.ok{display:block;background:rgba(16,185,129,.13);color:#6ee7b7!important}.wl-status.error{display:block;background:rgba(244,63,94,.13);color:#fda4af!important}.wl-honeypot{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;border:0!important;opacity:0!important;clip-path:inset(50%)!important;pointer-events:none!important}.wl-modal-open{overflow:hidden!important}@media(max-width:560px){.wl-modal{padding:12px}.wl-card{padding:28px 20px}.wl-grid{grid-template-columns:minmax(0,1fr)}.wl-field.full{grid-column:auto}}`;
-  document.head.appendChild(style);
+document.documentElement.classList.add("js");
+window.addEventListener("DOMContentLoaded",()=>{
+  const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>[...r.querySelectorAll(s)];
+  const trustMarkup=qa("#how,#samples,#faq").map(section=>section.outerHTML).join("");
+  const demoMarkup=qa(".demo-typing,.demo-post").map(item=>item.outerHTML).join("");
+  const menu=q("#mobile-menu"),menuButton=q("#mobile-menu-button");
+  const closeMenu=()=>{menu.hidden=true;menuButton.setAttribute("aria-expanded","false")};
+  menuButton.addEventListener("click",()=>{const open=menu.hidden;menu.hidden=!open;menuButton.setAttribute("aria-expanded",String(open));menuButton.setAttribute("aria-label",open?"بستن منوی اصلی":"باز کردن منوی اصلی")});
+  qa("a",menu).forEach(a=>a.addEventListener("click",closeMenu));
 
-  const modal = document.createElement("div");
-  modal.className = "wl-modal";
-  modal.setAttribute("role", "dialog");
-  modal.setAttribute("aria-modal", "true");
-  modal.innerHTML = `<div class="wl-card"><button class="wl-close" type="button" aria-label="بستن">×</button><h2>به جمع اولین کاربران آی‌دیپ بپیوندید</h2><p>اوایل پاییز ۱۴۰۵، پیش از رونمایی عمومی به شما خبر می‌دهیم و ۷۰٪ تخفیف اولین خرید هر پلن را برایتان ارسال می‌کنیم.</p><form><div class="wl-grid"><div class="wl-field"><label>نام و نام خانوادگی</label><input name="name" autocomplete="name" required></div><div class="wl-field"><label>شماره موبایل</label><input name="phone" inputmode="tel" autocomplete="tel" placeholder="09123456789" required></div><div class="wl-field full"><label>حوزه کسب‌وکار</label><input name="business" placeholder="مثلاً فروشگاه پوشاک" required></div><div class="wl-field full"><label>ایمیل (اختیاری)</label><input name="email" inputmode="email" autocomplete="email" placeholder="name@example.com"></div><input class="wl-honeypot" name="website" tabindex="-1" autocomplete="off"></div><button class="wl-submit" type="submit">ثبت‌نام در لیست انتظار</button><p class="wl-note">اطلاعات شما فقط برای اطلاع‌رسانی زمان راه‌اندازی استفاده می‌شود.</p><p class="wl-status" aria-live="polite"></p></form></div>`;
-  document.body.appendChild(modal);
+  const reveal=qa(".demo-reveal"),show=()=>reveal.forEach((el,i)=>setTimeout(()=>el.classList.add("show"),i*650));
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches)reveal.forEach(el=>el.classList.add("show"));
+  else if("IntersectionObserver" in window){const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){show();observer.disconnect()}},{threshold:.2});observer.observe(reveal[0]);setTimeout(()=>reveal.forEach(el=>el.classList.add("show")),4000)}else show();
 
-  const open = () => {
-    if (!modal.isConnected) document.body.appendChild(modal);
-    modal.classList.add("is-open");
-    document.documentElement.classList.add("wl-modal-open");
-    setTimeout(() => modal.querySelector("input").focus(), 50);
-  };
-  const close = () => { modal.classList.remove("is-open"); document.documentElement.classList.remove("wl-modal-open"); };
-  modal.querySelector(".wl-close").addEventListener("click", close);
-  modal.addEventListener("click", (event) => { if (event.target === modal) close(); });
-  document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
-  window.addEventListener("open-waitlist", open);
-
-  document.addEventListener("click", (event) => {
-    const trigger = event.target.closest("button,a");
-    if (!trigger) return;
-    if (trigger.closest(".wl-modal")) return;
-    const label = trigger.textContent.trim();
-    const href = trigger.getAttribute("href") || "";
-    if (!/پیوستن به لیست انتظار|دریافت ۷۰٪ تخفیف|لیست انتظار/.test(label)) return;
-    event.preventDefault(); event.stopPropagation(); open();
-  }, true);
-
-  modal.querySelector("form").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const submit = form.querySelector(".wl-submit");
-    const status = form.querySelector(".wl-status");
-    submit.disabled = true; submit.textContent = "در حال ثبت…"; status.className = "wl-status";
-    try {
-      const data = {
-        name: form.elements.name.value,
-        phone: form.elements.phone.value,
-        business: form.elements.business.value,
-        email: form.elements.email.value,
-        website: form.elements.website.value,
-      };
-      const response = await fetch("/api/waitlist", { method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(data) });
-      const responseText = await response.text();
-      let result = {};
-      try { result = JSON.parse(responseText); } catch { result = {}; }
-      if (!response.ok) throw new Error(result.error || "خطا در ثبت اطلاعات");
-      form.reset();
-      status.textContent = "عالی شد! به لیست انتظار آی‌دیپ اضافه شدید. هنگام راه‌اندازی، کد تخفیف ۷۰٪ را برایتان ارسال می‌کنیم.";
-      status.className = "wl-status ok";
-    } catch (error) {
-      console.error("Waitlist submission failed", error);
-      const safeMessages = ["لطفاً نام، شماره تماس و حوزه کسب‌وکار را وارد کنید.", "تعداد درخواست‌ها زیاد است؛ چند دقیقه دیگر دوباره تلاش کنید.", "ثبت‌نام موقتاً در دسترس نیست.", "ارسال انجام نشد؛ لطفاً دوباره تلاش کنید."];
-      status.textContent = safeMessages.includes(error.message) ? error.message : "ارتباط با سرور برقرار نشد؛ لطفاً دوباره تلاش کنید.";
-      status.className = "wl-status error";
-    }
-    finally { submit.disabled = false; submit.textContent = "ثبت‌نام در لیست انتظار"; }
+  qa("#pricing > div > div.grid > div").forEach((card,index)=>{
+    const badge=document.createElement("span");badge.className="pricing-note";badge.textContent="قیمت لانچ – رزرو با ۷۰٪ تخفیف";card.insertBefore(badge,card.children[1]||null);
+    const assurance=document.createElement("p");assurance.className="price-assurance";assurance.textContent="پرداخت بعد از لانچ، الان فقط رزرو • ۷ روز ضمانت بازگشت";const button=q("button",card);button?.insertAdjacentElement("afterend",assurance);if(button)button.dataset.plan=["bronze","silver","gold"][index];
   });
-  }, 0);
+  qa(".mt-20.max-w-5xl.mx-auto .inline-flex").forEach(b=>{if(/^\+|هفتگی/.test(b.textContent.trim()))b.remove()});
+
+  const footerMarkup=`<footer class="footer-enhanced"><div class="cols"><div><div class="flex items-center gap-2"><img src="/ideep-logo.png" width="40" height="40" alt="لوگوی آی‌دیپ"><b>iDeep</b></div><p>دستیار هوشمند محتوای کسب‌وکارهای کوچک</p><a href="mailto:hello@ideep.ir">hello@ideep.ir</a><br><a href="tel:+982191006000">۰۲۱–۹۱۰۰۶۰۰۰</a></div><nav aria-label="دسترسی سریع"><b>دسترسی سریع</b><a href="#features">امکانات</a><a href="#platforms">پلتفرم‌ها</a><a href="#pricing">تعرفه‌ها</a><a href="#faq">سؤالات</a></nav><nav aria-label="قوانین و شبکه‌های اجتماعی"><b>قوانین و ارتباط</b><a href="#">حریم خصوصی</a><a href="#">شرایط استفاده</a><span class="social"><a href="https://instagram.com/ideep.ir" aria-label="اینستاگرام آی‌دیپ">◎</a><a href="https://t.me/ideep_ir" aria-label="تلگرام آی‌دیپ">➤</a></span></nav></div><p class="text-center text-slate-500 mt-8">© ۱۴۰۴ آی‌دیپ — تمامی حقوق محفوظ است.</p></footer>`;
+  const restoreEnhancedContent=()=>{if(!q("#faq")){const finalCta=qa("section.py-20").at(-1);finalCta?.insertAdjacentHTML("beforebegin",trustMarkup)}const headerCtas=qa("header .md\\:flex button");if(headerCtas.length>1)headerCtas.slice(0,-1).forEach(button=>button.remove());if(headerCtas.at(-1))headerCtas.at(-1).childNodes[0].textContent="🚀 پیوستن به لیست انتظار";const liveMenuButton=q("header button.md\\:hidden");if(!q("#mobile-menu"))q("header")?.insertAdjacentHTML("afterend",menu.outerHTML);if(liveMenuButton){liveMenuButton.id="mobile-menu-button";liveMenuButton.setAttribute("aria-label","باز کردن منوی اصلی");liveMenuButton.setAttribute("aria-expanded","false");liveMenuButton.setAttribute("aria-controls","mobile-menu");liveMenuButton.onclick=()=>{const liveMenu=q("#mobile-menu"),open=liveMenu.hidden;liveMenu.hidden=!open;liveMenuButton.setAttribute("aria-expanded",String(open))}}const footer=q("footer");if(footer&&!footer.classList.contains("footer-enhanced"))footer.outerHTML=footerMarkup;if(!modal.isConnected)document.body.appendChild(modal);const chat=q(".relative.p-4");if(chat&&!q(".demo-post",chat))chat.insertAdjacentHTML("beforeend",demoMarkup);const proofs=qa(".mt-20.max-w-5xl.mx-auto .glass.rounded-2xl.p-5");[["۵","پلتفرم در برنامه راه‌اندازی"],["کمتر از ۲ دقیقه","زمان موردنیاز برای راه‌اندازی"],["۷۰٪","تخفیف اولین خرید اعضای انتظار"]].forEach((copy,i)=>{const card=proofs[i];if(card){q(".text-3xl",card).textContent=copy[0];q(".text-sm",card).textContent=copy[1];qa(".inline-flex",card).forEach(b=>b.remove())}});qa("#pricing > div > div.grid > div").forEach((card,index)=>{if(!q(".pricing-note",card)){const badge=document.createElement("span");badge.className="pricing-note";badge.textContent="قیمت لانچ – رزرو با ۷۰٪ تخفیف";card.insertBefore(badge,card.children[1]||null);const assurance=document.createElement("p");assurance.className="price-assurance";assurance.textContent="پرداخت بعد از لانچ، الان فقط رزرو • ۷ روز ضمانت بازگشت";const button=q("button",card);button?.insertAdjacentElement("afterend",assurance);if(button)button.dataset.plan=["bronze","silver","gold"][index]}})};
+
+  const style=document.createElement("style");style.textContent=`.wl-modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:#020617db;backdrop-filter:blur(12px)}.wl-modal.open{display:grid}.wl-card{width:min(570px,100%);max-height:92vh;overflow:auto;padding:28px;border-radius:25px;position:relative;direction:rtl;color:#fff}.wl-close{position:absolute;left:16px;top:12px;border:0;background:none;color:#cbd5e1;font-size:30px}.wl-card h2{font-size:28px;margin:0}.wl-card>p{color:#cbd5e1}.wl-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wl-field{display:grid;gap:5px}.wl-field.full{grid-column:1/-1}.wl-field input{width:100%;border:1px solid #ffffff20;border-radius:11px;padding:12px;background:#ffffff0c;color:#fff}.wl-submit{width:100%;margin-top:16px;border:0;border-radius:12px;padding:13px;background:linear-gradient(90deg,#6366f1,#d946ef);color:#fff;font-weight:800}.wl-status{display:none;padding:10px;border-radius:10px}.wl-status.ok,.wl-status.error{display:block}.wl-status.ok{background:#10b98122;color:#6ee7b7}.wl-status.error{background:#f43f5e22;color:#fda4af}@media(max-width:560px){.wl-grid{grid-template-columns:1fr}.wl-field.full{grid-column:auto}}`;document.head.appendChild(style);
+  const modal=document.createElement("div");modal.className="wl-modal";modal.innerHTML=`<div class="wl-card glass-strong" role="dialog" aria-modal="true" aria-labelledby="wl-title"><button class="wl-close" aria-label="بستن فرم">×</button><h2 id="wl-title">پیوستن به لیست انتظار</h2><p>کد تخفیف ۷۰٪ هم‌زمان با لانچ برایتان ارسال می‌شود.</p><form novalidate><div class="wl-grid"><label class="wl-field">نام <small>(اختیاری)</small><input name="name" autocomplete="name"></label><label class="wl-field">شماره موبایل<input name="phone" inputmode="tel" autocomplete="tel" placeholder="۰۹۱۲۱۲۳۴۵۶۷"></label><label class="wl-field full">ایمیل<input name="email" type="email" autocomplete="email" dir="ltr" placeholder="name@example.com"></label><label class="wl-field full">نوع کسب‌وکار<select name="business" required><option value="">انتخاب کنید</option><option>فروشگاه</option><option>خدماتی</option><option>غذایی</option><option>دیگر</option></select></label></div><fieldset><legend>پلتفرم‌های مورد علاقه</legend><div class="modal-platforms">${["اینستاگرام","تلگرام","بله","ایتا","روبیکا"].map(x=>`<label><input type="checkbox" name="platforms" value="${x}"> ${x}</label>`).join("")}</div></fieldset><input type="hidden" name="plan"><input class="wl-plan" name="website" tabindex="-1"><p class="wl-status" aria-live="polite"></p><button class="wl-submit">ثبت‌نام در لیست انتظار</button></form></div>`;document.body.appendChild(modal);restoreEnhancedContent();setTimeout(restoreEnhancedContent,1200);
+  let previousFocus;const open=plan=>{previousFocus=document.activeElement;modal.classList.add("open");document.body.style.overflow="hidden";q("[name=plan]",modal).value=plan||"";q("input",modal).focus()},close=()=>{modal.classList.remove("open");document.body.style.overflow="";previousFocus?.focus()};
+  document.addEventListener("click",e=>{const trigger=e.target.closest("button,a");if(!trigger||trigger.closest(".wl-modal"))return;if(trigger.classList.contains("mobile-waitlist")||/لیست انتظار|دریافت ۷۰٪|انتخاب پلن/.test(trigger.textContent)){e.preventDefault();open(trigger.dataset.plan)}});q(".wl-close",modal).onclick=close;modal.onclick=e=>{if(e.target===modal)close()};document.addEventListener("keydown",e=>{if(e.key==="Escape"){close();closeMenu()}});
+  const normalize=s=>s.replace(/[۰-۹]/g,c=>"۰۱۲۳۴۵۶۷۸۹".indexOf(c)).replace(/[٠-٩]/g,c=>"٠١٢٣٤٥٦٧٨٩".indexOf(c));
+  q("form",modal).onsubmit=async e=>{e.preventDefault();const form=e.currentTarget,status=q(".wl-status",form),submit=q(".wl-submit",form),phone=normalize(form.phone.value.trim()).replace(/[\s-]/g,""),email=form.email.value.trim();status.className="wl-status";const error=m=>{status.textContent=m;status.classList.add("error")};if(!phone&&!email)return error("شماره موبایل یا ایمیل را وارد کنید.");if(phone&&!/^(?:\+98|0098|98|0)?9\d{9}$/.test(phone))return error("شماره موبایل ایرانی معتبر نیست.");if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return error("ایمیل معتبر نیست.");if(!form.business.value)return error("نوع کسب‌وکار را انتخاب کنید.");if(localStorage.getItem("ideep-waitlist")){status.textContent="اطلاعات شما قبلاً ثبت شده است.";return status.classList.add("ok")}submit.disabled=true;submit.textContent="در حال ثبت…";try{const data={name:form.name.value,phone,email,business:form.business.value,platforms:qa("[name=platforms]:checked",form).map(x=>x.value),plan:form.plan.value,website:form.website.value},response=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)}),result=await response.json().catch(()=>({}));if(!response.ok)throw Error(result.error||"ثبت انجام نشد.");localStorage.setItem("ideep-waitlist",Date.now());form.reset();status.textContent="در لیست انتظار ثبت شدی! کد تخفیف ۷۰٪ موقع لانچ ارسال می‌شود";status.classList.add("ok")}catch(err){error(err.message||"ارتباط با سرور برقرار نشد.")}finally{submit.disabled=false;submit.textContent="ثبت‌نام در لیست انتظار"}};
 });

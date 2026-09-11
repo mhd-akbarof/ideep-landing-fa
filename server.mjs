@@ -33,11 +33,14 @@ async function handleWaitlist(request, response) {
   let body;
   try { body = JSON.parse(raw); } catch { return sendJson(response, 400, { error:"اطلاعات فرم معتبر نیست." }); }
   if (body.website) return sendJson(response, 200, { ok:true });
-  const name=clean(body.name,80), phone=clean(body.phone,30), business=clean(body.business), email=clean(body.email);
-  if (!name || !phone || !business) return sendJson(response,400,{error:"لطفاً نام، شماره تماس و حوزه کسب‌وکار را وارد کنید."});
+  const name=clean(body.name,80), phone=clean(body.phone,30), business=clean(body.business), email=clean(body.email), plan=clean(body.plan,30);
+  const platforms=Array.isArray(body.platforms)?body.platforms.map(item=>clean(item,30)).slice(0,5):[];
+  if ((!phone && !email) || !business) return sendJson(response,400,{error:"لطفاً یک راه ارتباطی و نوع کسب‌وکار را وارد کنید."});
+  if (phone && !/^(?:\+98|0098|98|0)?9\d{9}$/.test(phone.replace(/[\s-]/g,""))) return sendJson(response,400,{error:"شماره موبایل معتبر نیست."});
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return sendJson(response,400,{error:"ایمیل معتبر نیست."});
   if (isRateLimited(request)) return sendJson(response,429,{error:"تعداد درخواست‌ها زیاد است؛ چند دقیقه دیگر دوباره تلاش کنید."});
   if (!token || !chatId) { console.error("Missing Telegram environment variables"); return sendJson(response,503,{error:"ثبت‌نام موقتاً در دسترس نیست."}); }
-  const message=["🚀 عضو جدید لیست انتظار iDeep","",`نام: ${name}`,`موبایل: ${phone}`,`کسب‌وکار: ${business}`,`ایمیل: ${email || "وارد نشده"}`,"پیشنهاد: ۷۰٪ تخفیف اولین خرید هر پلن"].join("\n");
+  const message=["🚀 عضو جدید لیست انتظار iDeep","",`نام: ${name || "وارد نشده"}`,`موبایل: ${phone || "وارد نشده"}`,`ایمیل: ${email || "وارد نشده"}`,`کسب‌وکار: ${business}`,`پلتفرم‌ها: ${platforms.join("، ") || "انتخاب نشده"}`,`پلن: ${plan || "انتخاب نشده"}`,"پیشنهاد: ۷۰٪ تخفیف اولین خرید هر پلن"].join("\n");
   try {
     const result=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:chatId,text:message}),signal:AbortSignal.timeout(8000)});
     if (!result.ok) throw new Error(`Telegram returned ${result.status}`);
