@@ -1,0 +1,163 @@
+---
+import Base from '../layouts/Base.astro';
+import HeroMotion from './HeroMotion.astro';
+import type { Copy } from '../data/fa';
+import { plans } from '../data/pricing';
+import { links, img } from '../data/site';
+interface Props { c: Copy }
+const { c } = Astro.props;
+const stepIcons = [
+  '<path d="M10 13a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/>',
+  '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.4.4.6.8.6 1.2v1h6v-1c0-.4.2-.8.6-1.2A6 6 0 0 0 12 3z"/>',
+  '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17"/>',
+];
+const whyIcons = [
+  '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor"/>',
+  '<path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z"/>',
+  '<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17M8.5 15l2.2 2.2 4.3-4.4"/>',
+  '<path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6"/><path d="M18 3v4h-4M6 21v-4h4"/>',
+  '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z" fill="currentColor"/>',
+  '<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>',
+];
+const whyTints = ['violet', 'orange', 'green', 'blue', 'violet', 'orange'];
+const stepTints = ['violet', 'orange', 'green'];
+const fmtIcons = [
+  '<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9.5" r="1.5"/><path d="M4 16l5-4 4 3 3-2 4 3"/>',
+  '<rect x="7" y="5" width="13" height="14" rx="2.5"/><path d="M4 8v8"/>',
+  '<rect x="3.5" y="6" width="17" height="12" rx="3"/><path d="M10.5 9.5l4 2.5-4 2.5z" fill="currentColor"/>',
+];
+---
+<Base c={c}>
+  <div class="nav-outer">
+    <nav class="nav" aria-label="منوی اصلی">
+      <a class="brand" href={c.path}><img src="/logo-mark.png" alt="" width="32" height="30" />ideep</a>
+      <div class="nav-links">
+        <a href="#why">{c.nav.product}</a><a href="#how">{c.nav.how}</a><a href="#pricing">{c.nav.pricing}</a><a href="#faq">{c.nav.faq}</a>
+      </div>
+      <div class="nav-end">
+        <a class="btn btn-ghost hide-sm" href={links.login}>{c.nav.login}</a>
+        <a class="btn btn-primary" href={links.signup}>{c.nav.cta}</a>
+      </div>
+    </nav>
+  </div>
+
+  <main>
+    <header class="hero">
+      <div class="wrap">
+        <div class="hero-copy">
+          <span class="badge"><span class="nets"><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#2aabee"/><path d="M5.2 11.8l12.4-4.8c.6-.2 1.1.1.9.9l-2.1 9.9c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.7.3l.2-3.4 6.2-5.6c.3-.2-.1-.4-.4-.2L8.9 13.5l-3.3-1c-.7-.2-.7-.7.2-1z" fill="#fff"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb23e"/><stop offset=".5" stop-color="#e0457b"/><stop offset="1" stop-color="#7047eb"/></linearGradient></defs><rect width="24" height="24" rx="7" fill="url(#igg)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="16.2" cy="7.8" r="1" fill="#fff"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#1fb58f"/><path d="M12 5.6c-3.8 0-6.6 2.6-6.6 5.9 0 1.9.9 3.5 2.4 4.6l-.5 2.4 2.6-1.3c.7.2 1.4.3 2.1.3 3.8 0 6.6-2.6 6.6-6s-2.8-5.9-6.6-5.9z" fill="#fff"/><circle cx="9.2" cy="11.6" r="1" fill="#1fb58f"/><circle cx="12" cy="11.6" r="1" fill="#1fb58f"/><circle cx="14.8" cy="11.6" r="1" fill="#1fb58f"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#f7931e"/><path d="M16.9 13.2H9c.3 1.6 1.6 2.6 3.3 2.6 1.1 0 2-.4 2.7-1.1l1.5 1.2c-1 1.2-2.5 1.9-4.3 1.9-3.1 0-5.4-2.2-5.4-5.3S9 7.2 12 7.2c2.9 0 5 2.1 5 5.2v.8zM9 11.5h5.8c-.3-1.4-1.4-2.4-2.9-2.4S9.4 10.1 9 11.5z" fill="#fff"/></svg><i class="net plus soon">+</i></span>{c.hero.badge}</span>
+          <h1>{c.hero.title} <span class="grad">{c.hero.accent}</span></h1>
+          <p class="sub">{c.hero.sub}</p>
+          <div class="cta-row">
+            <a class="btn btn-primary btn-lg" href={links.signup}>{c.hero.cta}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="fwd"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="btn btn-ghost btn-lg" href="#pricing">{c.hero.cta2}</a>
+          </div>
+          <small>{c.hero.note}</small>
+        </div>
+      </div>
+      <img class="hero-art" src="/images/hero.webp" alt="" width="1536" height="1024" fetchpriority="high" />
+    </header>
+
+    <section id="how"><div class="wrap">
+      <span class="eyebrow">{c.how.eyebrow}</span><h2>{c.how.title}</h2>
+      <div class="steps">
+        {c.how.steps.map((s, i) => (
+          <>
+            <div class={`card tint-${stepTints[i]} step`}>
+              <span class="num">{i + 1}</span>
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={stepIcons[i]} />
+              <h3>{s.t}</h3><p>{s.d}</p>
+            </div>
+            {i < 2 && <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>}
+          </>
+        ))}
+      </div>
+    </div></section>
+
+    <section id="formats"><div class="wrap">
+      <span class="eyebrow">{c.formats.eyebrow}</span><h2>{c.formats.title}</h2>
+      <div class="fgrid">
+        <div class="fcard"><div class="vis"><img src={img(7)} alt="" loading="lazy" width="600" height="600" onerror="this.remove()" /></div><div class="body"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={fmtIcons[0]} /><div><h3>{c.formats.items[0].t}</h3><p>{c.formats.items[0].d}</p></div></div></div>
+        <div class="fcard"><div class="vis stack">{[8, 9, 10].map((n) => <img src={img(n)} alt="" loading="lazy" width="400" height="400" onerror="this.remove()" />)}</div><div class="body"><svg class="ico orange" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={fmtIcons[1]} /><div><h3>{c.formats.items[1].t}</h3><p>{c.formats.items[1].d}</p></div></div></div>
+        <div class="fcard"><div class="vis"><img src={img(11)} alt="" loading="lazy" width="600" height="600" onerror="this.remove()" /><div class="play"><span><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span></div><span class="sec">0:10</span></div><div class="body"><svg class="ico blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={fmtIcons[2]} /><div><h3>{c.formats.items[2].t}</h3><p>{c.formats.items[2].d}</p></div></div></div>
+      </div>
+    </div></section>
+
+    <section id="why"><div class="wrap">
+      <span class="eyebrow">{c.why.eyebrow}</span><h2>{c.why.title}</h2>
+      <div class="wgrid">
+        {c.why.items.map((w, i) => (
+          <div class={`card tint-${whyTints[i]}`}>
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={whyIcons[i]} />
+            <h3>{w.t}</h3><p>{w.d}</p>
+          </div>
+        ))}
+      </div>
+    </div></section>
+
+    <section id="pricing"><div class="wrap">
+      <span class="eyebrow">{c.pricing.eyebrow}</span><h2>{c.pricing.title}</h2>
+      <div class="billing" role="group">
+        <button type="button" class="seg on" data-bill="month">{c.pricing.monthly}</button>
+        <button type="button" class="seg" data-bill="year">{c.pricing.yearly}<span class="save">{c.pricing.save}</span></button>
+      </div>
+      <div class="pgrid" id="pgrid" data-bill="month">
+        {plans.map((p) => (
+          <div class:list={['plan', { pop: p.popular }]}>
+            {p.popular && <span class="tag">{c.pricing.popular}</span>}
+            <h3>{c.pricing.names[p.id]}</h3>
+            <div class="price">
+              <span class="m"><bdi>{p.price}</bdi>{p.id !== 'free' && <small>{c.pricing.per}</small>}</span>
+              {p.yearly && <span class="y"><bdi>{p.yearly}</bdi><small>{c.pricing.perYear}</small></span>}
+            </div>
+            {p.yearly && <p class="equiv y">{c.pricing.equiv.replace('{n}', p.yearlyPerMonth ?? '')}</p>}
+            <ul>{c.pricing.features[p.id].map((f) => <li>{f}</li>)}</ul>
+            <a class:list={['btn', p.popular ? 'btn-primary' : 'btn-soft']} href={links.signup}>{p.id === 'free' ? c.pricing.cta : c.pricing.ctaPaid}</a>
+          </div>
+        ))}
+      </div>
+      <p class="pnote">{c.pricing.note}</p>
+    </div></section>
+
+    <section id="faq"><div class="wrap">
+      <span class="eyebrow">{c.faq.eyebrow}</span><h2>{c.faq.title}</h2>
+      <div class="faq-grid">
+        <div class="faq-list">
+          {c.faq.items.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+        </div>
+        <div class="faq-art" aria-hidden="true">
+          <img class="f1" src={img(1)} alt="" loading="lazy" width="320" height="320" onerror="this.remove()" />
+          <img class="f2" src={img(7)} alt="" loading="lazy" width="320" height="320" onerror="this.remove()" />
+          <img class="f3" src={img(11)} alt="" loading="lazy" width="320" height="320" onerror="this.remove()" />
+          <svg class="f-tg" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#2aabee"/><path d="M5.2 11.8l12.4-4.8c.6-.2 1.1.1.9.9l-2.1 9.9c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.7.3l.2-3.4 6.2-5.6c.3-.2-.1-.4-.4-.2L8.9 13.5l-3.3-1c-.7-.2-.7-.7.2-1z" fill="#fff"/></svg><svg class="f-ig" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="7" fill="url(#igg)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="16.2" cy="7.8" r="1" fill="#fff"/></svg><svg class="f-bale" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#1fb58f"/><path d="M12 5.6c-3.8 0-6.6 2.6-6.6 5.9 0 1.9.9 3.5 2.4 4.6l-.5 2.4 2.6-1.3c.7.2 1.4.3 2.1.3 3.8 0 6.6-2.6 6.6-6s-2.8-5.9-6.6-5.9z" fill="#fff"/><circle cx="9.2" cy="11.6" r="1" fill="#1fb58f"/><circle cx="12" cy="11.6" r="1" fill="#1fb58f"/><circle cx="14.8" cy="11.6" r="1" fill="#1fb58f"/></svg><svg class="f-eitaa" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#f7931e"/><path d="M16.9 13.2H9c.3 1.6 1.6 2.6 3.3 2.6 1.1 0 2-.4 2.7-1.1l1.5 1.2c-1 1.2-2.5 1.9-4.3 1.9-3.1 0-5.4-2.2-5.4-5.3S9 7.2 12 7.2c2.9 0 5 2.1 5 5.2v.8zM9 11.5h5.8c-.3-1.4-1.4-2.4-2.9-2.4S9.4 10.1 9 11.5z" fill="#fff"/></svg>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="final"><div class="wrap">
+      <div class="final-box">
+        <div class="final-text"><h2>{c.final.title}</h2><p>{c.final.sub}</p><a class="btn btn-lg" href={links.signup}>{c.final.cta}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="fwd"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+        <div class="final-motion"><HeroMotion c={c} /></div>
+      </div>
+    </div></section>
+  </main>
+
+  <footer><div class="wrap">
+    <div class="fcols">
+      <div><a class="brand" href={c.path}><img src="/logo-mark.png" alt="" width="32" height="30" />ideep</a><p class="tag">{c.footer.tag}</p></div>
+      <div><h4>{c.footer.product}</h4><ul><li><a href="#how">{c.nav.how}</a></li><li><a href="#pricing">{c.nav.pricing}</a></li><li><a href="#faq">{c.nav.faq}</a></li><li><a href={links.login}>{c.nav.login}</a></li></ul></div>
+      <div><h4>{c.footer.legal}</h4><ul><li><a href={links.privacy}>{c.footer.privacy}</a></li><li><a href={links.terms}>{c.footer.terms}</a></li><li><a href={links.privacyPdf}>{c.footer.privacyPdf}</a></li><li><a href={links.termsPdf}>{c.footer.termsPdf}</a></li></ul></div>
+      <div><h4>{c.footer.contact}</h4><ul><li><a href={links.support}>support@ideep.app</a></li><li><a href={links.privacyMail}>privacy@ideep.app</a></li></ul></div>
+    </div>
+    <p class="copy">© {new Date().getFullYear()} {c.footer.rights}</p>
+  </div></footer>
+
+  <script is:inline>
+    document.querySelectorAll('button[data-bill]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.getElementById('pgrid').dataset.bill = b.dataset.bill;
+        document.querySelectorAll('button.seg').forEach(function (x) { x.classList.toggle('on', x === b); });
+      });
+    });
+  </script>
+</Base>

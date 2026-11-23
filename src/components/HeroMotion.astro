@@ -1,0 +1,290 @@
+---
+// Decorative 10s looping product story for the hero stage.
+// Every frame is derived from time alone: window.seek(seconds) draws any frame exactly.
+import type { Copy } from '../data/fa';
+import { img } from '../data/site';
+interface Props { c: Copy }
+const { c } = Astro.props;
+const rows = c.hero.mockRows;
+const url = 'yourbrand.com';
+const dots = ['var(--primary)', 'var(--orange)', 'var(--blue)'];
+const picked = ['0-0', '1-1', '2-0']; // column-row of the idea that gets ticked
+const cards = [0, 1, 2].flatMap((r) => [0, 1, 2].map((col) => ({ col, r, pick: picked.indexOf(`${col}-${r}`) })));
+---
+<div class="hm-cq" aria-hidden="true">
+  <div class="hm-fit">
+    <div class="hm" id="hm" data-mode="d">
+      <div class="hm-field" data-k="field">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/></svg>
+        <span class="hm-type">
+          <span class="hm-ph">{c.hero.mockField}</span>
+          {url.split('').map((ch) => <span class="hm-ch">{ch}</span>)}
+          <i class="hm-caret"></i>
+        </span>
+        <i class="hm-ring"></i>
+      </div>
+
+      <div class="hm-logo" data-k="logo"><i></i></div>
+      {dots.map((d, i) => <i class="hm-sw" data-k={`sw${i}`} style={`background:${d}`}></i>)}
+      <div class="hm-pill hm-ready" data-k="ready"><i class="hm-ok"></i>{c.hero.mockReady}</div>
+
+      {rows.map(([, , f], i) => <div class="hm-tab" data-k={`tab${i}`}><i style={`background:${dots[i]}`}></i>{f}</div>)}
+
+      {picked.map((_, k) => <div class="hm-ghost" data-k={`ghost${k}`}></div>)}
+      {cards.map(({ col, r, pick }) => (
+        <div class="hm-card" data-k={`card${col}-${r}`} data-pick={pick}>
+          <i class="hm-on"></i><b></b><b></b><span class="hm-tick"><i class="hm-ok"></i></span>
+        </div>
+      ))}
+
+      <h3 class="hm-title" data-k="title">{c.hero.mockTitle}</h3>
+      {rows.map(([d, t, f], i) => (
+        <div class="hm-row" data-k={`row${i}`}>
+          <i class="hm-slot"></i>
+          <div class="hm-meta"><span><b>{d}</b><time>{t}</time></span><small>{f}</small></div>
+          <div class="hm-pill hm-pub"><i class="hm-ok"></i>{c.hero.mockPublished}</div>
+        </div>
+      ))}
+
+      <div class="hm-post" data-k="post0">
+        <div class="hm-tile hm-a"><img src={img(7)} alt="" width="300" height="300" onerror="this.remove()" /></div>
+      </div>
+      <div class="hm-post hm-carousel" data-k="post1">
+        <div class="hm-tile hm-b hm-fan"><img src={img(9)} alt="" width="300" height="300" onerror="this.remove()" /></div>
+        <div class="hm-tile hm-c hm-fan"><img src={img(10)} alt="" width="300" height="300" onerror="this.remove()" /></div>
+        <div class="hm-tile hm-d"><img src={img(8)} alt="" width="300" height="300" onerror="this.remove()" /><span class="hm-dots"><i></i><i></i><i></i></span></div>
+      </div>
+      <div class="hm-post" data-k="post2">
+        <div class="hm-tile hm-e">
+          <img src={img(11)} alt="" width="300" height="300" onerror="this.remove()" />
+          <span class="hm-play"><svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg></span>
+          <span class="hm-sec">0:10</span>
+          <i class="hm-bar"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hm-cq { container-type: inline-size; }
+  .hm-fit { position: relative; aspect-ratio: 760 / 408; max-width: 874px; margin-inline: auto; }
+  @container (max-width: 599.98px) { .hm-fit { aspect-ratio: 304 / 576; max-width: 426px; } }
+
+  .hm {
+    position: absolute; inset: 0 auto auto 0; width: 760px; height: 408px; transform-origin: 0 0;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px; box-shadow: var(--shadow);
+    text-align: start; font-size: 13px; line-height: 1.3; color: var(--text); overflow: hidden; user-select: none; pointer-events: none;
+  }
+  .hm[data-mode='m'] { width: 304px; height: 576px; font-size: 12px; border-radius: 18px; }
+  .hm > * { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+  .hm i { display: block; font-style: normal; }
+
+  /* 1. website field */
+  .hm-field { display: flex; align-items: center; gap: 10px; padding-inline: 14px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+  .hm-field svg { flex: none; }
+  .hm-type { position: relative; display: flex; direction: ltr; color: var(--text); font-weight: 600; font-size: 1.08em; white-space: pre; }
+  .hm-ph { position: absolute; inset-inline-start: 0; color: var(--muted); font-weight: 500; }
+  .hm-ch { opacity: 0; }
+  .hm-caret { position: absolute; inset: 1px auto 1px 0; width: 2px; border-radius: 2px; background: var(--primary); }
+  .hm-ring { position: absolute; inset: -1px; border-radius: inherit; border: 1.5px solid var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 16%, transparent); opacity: 0; }
+
+  /* brand */
+  .hm-logo { border-radius: 10px; background: linear-gradient(135deg, var(--primary), var(--blue)); display: grid; place-items: center; }
+  .hm-logo i { width: 42%; height: 42%; border-radius: 50%; border: 3px solid var(--on-primary); border-inline-end-color: transparent; }
+  .hm-sw { border-radius: 50%; box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--line); }
+  .hm-pill { display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 999px; font-weight: 600; font-size: .88em; white-space: nowrap; color: var(--green); background: color-mix(in srgb, var(--green) 14%, var(--surface)); }
+  .hm-ok { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--green) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.3 2.3 4.7-4.9' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100%; }
+
+  /* 2. ideas */
+  .hm-tab { display: flex; align-items: center; gap: 6px; padding-inline: 10px; border-radius: 999px; background: var(--surface-2); font-weight: 600; font-size: .88em; white-space: nowrap; }
+  .hm-tab i { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .hm-card { border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--line); padding: 12px; display: grid; gap: 7px; align-content: center; }
+  .hm-card b { height: 6px; border-radius: 6px; background: color-mix(in srgb, var(--muted) 26%, transparent); width: 62%; }
+  .hm-card b + b { width: 40%; background: color-mix(in srgb, var(--muted) 16%, transparent); }
+  .hm-on { position: absolute; inset: -1px; border-radius: inherit; border: 1.5px solid var(--primary); background: var(--primary-soft); opacity: 0; z-index: -1; }
+  .hm-card { isolation: isolate; }
+  .hm-tick { position: absolute; inset: 9px 9px auto auto; width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); }
+  .hm-tick .hm-ok { width: 16px; height: 16px; margin: -1.5px; background-color: var(--primary); opacity: 0; }
+  .hm-ghost { border-radius: var(--radius); border: 1.5px dashed color-mix(in srgb, var(--primary) 45%, var(--line)); }
+  .hm[data-mode='m'] .hm-card { padding: 9px; gap: 6px; }
+  .hm[data-mode='m'] .hm-tick { inset: 7px 7px auto auto; width: 14px; height: 14px; }
+  .hm[data-mode='m'] .hm-tick .hm-ok { width: 14px; height: 14px; }
+  .hm[data-mode='m'] .hm-tab { padding-inline: 7px; gap: 5px; font-size: .84em; }
+
+  /* 4. schedule */
+  .hm-title { font-size: 1.2em; font-weight: 700; letter-spacing: -0.01em; line-height: 28px; }
+  .hm-row { display: flex; align-items: center; gap: 14px; padding: 8px; border-radius: var(--radius); background: var(--surface-2); }
+  .hm-slot { flex: none; width: 80px; height: 80px; border-radius: 10px; border: 1.5px dashed var(--line); }
+  .hm-meta { display: grid; gap: 2px; }
+  .hm-meta span { display: flex; gap: 7px; align-items: baseline; }
+  .hm-meta time, .hm-meta small { color: var(--muted); }
+  .hm-meta small { font-size: .9em; margin: 0; }
+  .hm-pub { margin-inline-start: auto; margin-inline-end: 6px; padding: 5px 10px 5px 6px; transform-origin: 100% 50%; opacity: 0; }
+  .hm[data-mode='m'] .hm-row { gap: 10px; }
+  .hm[data-mode='m'] .hm-slot { width: 44px; height: 44px; border-radius: 8px; }
+  .hm[data-mode='m'] .hm-pub { margin-inline-end: 2px; }
+  [dir='rtl'] .hm-pub { transform-origin: 0 50%; }
+  [dir='rtl'] .hm-tick { inset: 9px auto auto 9px; }
+  [dir='rtl'] .hm[data-mode='m'] .hm-tick { inset: 7px auto auto 7px; }
+
+  /* 3. finished posts */
+  .hm-post { z-index: 3; opacity: 0; }
+  .hm-carousel { z-index: 2; }
+  .hm-tile { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+  .hm-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+  .hm-tile::before, .hm-tile::after { content: ''; position: absolute; border-radius: 50%; }
+  .hm-a { background: linear-gradient(140deg, var(--primary), var(--blue)); }
+  .hm-a::before { inset: 18% 18% auto auto; width: 34%; height: 34%; background: var(--orange); }
+  .hm-a::after { inset: auto auto -22% -12%; width: 80%; height: 80%; background: color-mix(in srgb, var(--on-primary) 20%, transparent); }
+  .hm-b { background: linear-gradient(140deg, var(--blue), var(--primary)); }
+  .hm-c { background: linear-gradient(140deg, var(--orange), var(--primary)); }
+  .hm-d { background: linear-gradient(140deg, var(--primary), var(--orange)); }
+  .hm-d::before { inset: 16% auto auto 14%; width: 44%; height: 9%; border-radius: 99px; background: color-mix(in srgb, var(--on-primary) 85%, transparent); }
+  .hm-d::after { inset: 32% auto auto 14%; width: 62%; height: 9%; border-radius: 99px; background: color-mix(in srgb, var(--on-primary) 40%, transparent); }
+  .hm-e { background: linear-gradient(140deg, var(--blue), var(--green)); }
+  .hm-e::before { inset: -20% -20% auto auto; width: 75%; height: 75%; background: color-mix(in srgb, var(--on-primary) 18%, transparent); }
+  .hm-dots { position: absolute; inset: auto 0 9% 0; display: flex; justify-content: center; gap: 4px; z-index: 2; }
+  .hm-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--on-primary); opacity: .5; }
+  .hm-dots i:first-child { opacity: 1; }
+  .hm-play { position: absolute; inset: 0; margin: auto; width: 38%; height: 38%; border-radius: 50%; background: rgb(255 255 255 / 90%); display: grid; place-items: center; z-index: 2; }
+  .hm-play svg { width: 42%; fill: var(--primary); margin-inline-start: 8%; }
+  .hm-sec { position: absolute; inset: 7% 7% auto auto; background: rgb(0 0 0 / 65%); color: #fff; font-size: 10px; font-weight: 600; line-height: 1; padding: 3px 6px; border-radius: 999px; z-index: 2; }
+  .hm-bar { position: absolute; inset: auto 0 0 0; height: 4px; background: var(--on-primary); transform-origin: 0 50%; z-index: 2; }
+</style>
+
+<script is:inline>
+  (function () {
+    var root = document.getElementById('hm');
+    if (!root) return;
+    var cq = root.parentNode.parentNode, D = 10, N, mode, B = {}, E = {}, cx = [0];
+    [].forEach.call(root.querySelectorAll('[data-k]'), function (el) { E[el.dataset.k] = el; });
+    var q = function (el, s) { return el.querySelector(s); }, qa = function (s) { return [].slice.call(root.querySelectorAll(s)); };
+    var chars = qa('.hm-ch'), ph = q(root, '.hm-ph'), caret = q(root, '.hm-caret'), ring = q(root, '.hm-ring');
+    var fans = qa('.hm-fan'), play = q(root, '.hm-play'), sec = q(root, '.hm-sec'), bar = q(root, '.hm-bar');
+    var PICK = [[0, 0], [1, 1], [2, 0]];
+    N = chars.length;
+    // right-to-left pages draw the same story mirrored: every box is flipped across the stage
+    var RTL = getComputedStyle(root).direction === 'rtl';
+
+    var LAY = {
+      d: { W: 760, H: 408, fx: 24, fy: 24, fw: 380, fh: 46, by: 84, logo: 32, sw: 20, rw: 116, ty: 134, th: 28, cw: 120, cg: 10, cy: 174, ch: 64, cgy: 8, post: 104, sx: 436, sw2: 300, tty: 22, ry: 62, rh: 96, rg: 12, thumb: 80, pad: 8 },
+      m: { W: 304, H: 576, fx: 14, fy: 14, fw: 276, fh: 42, by: 66, logo: 30, sw: 18, rw: 104, ty: 108, th: 26, cw: 88, cg: 6, cy: 142, ch: 54, cgy: 8, post: 76, sx: 14, sw2: 276, tty: 334, ry: 366, rh: 60, rg: 8, thumb: 44, pad: 8 }
+    };
+
+    function box(k, x, y, w, h) {
+      if (RTL) x = LAY[mode].W - x - w;
+      var s = E[k].style;
+      s.left = x + 'px'; s.top = y + 'px'; s.width = w + 'px'; s.height = h + 'px';
+      B[k] = { x: x, y: y, w: w, h: h };
+    }
+    function layout() {
+      var w = cq.clientWidth, m = w < 600 ? 'm' : 'd', L = LAY[m], i, c, r;
+      root.style.transform = 'scale(' + (root.parentNode.clientWidth / L.W) + ')';
+      if (m === mode) return;
+      mode = m; root.dataset.mode = m;
+      box('field', L.fx, L.fy, L.fw, L.fh);
+      box('logo', L.fx, L.by, L.logo, L.logo);
+      for (i = 0; i < 3; i++) box('sw' + i, L.fx + L.logo + 14 + i * (L.sw + 8), L.by + (L.logo - L.sw) / 2, L.sw, L.sw);
+      box('ready', L.fx + L.fw - L.rw, L.by + 1, L.rw, L.logo - 2);
+      for (c = 0; c < 3; c++) {
+        var x = L.fx + c * (L.cw + L.cg);
+        box('tab' + c, x, L.ty, L.cw, L.th);
+        for (r = 0; r < 3; r++) box('card' + c + '-' + r, x, L.cy + r * (L.ch + L.cgy), L.cw, L.ch);
+        box('post' + c, x + (L.cw - L.post) / 2, L.cy + (3 * L.ch + 2 * L.cgy - L.post) / 2, L.post, L.post);
+        box('row' + c, L.sx, L.ry + c * (L.rh + L.rg), L.sw2, L.rh);
+      }
+      for (i = 0; i < 3; i++) { c = B['card' + PICK[i][0] + '-' + PICK[i][1]]; box('ghost' + i, RTL ? L.W - c.x - c.w : c.x, c.y, c.w, c.h); }
+      box('title', L.sx, L.tty, L.sw2, 28);
+      cx = [0];
+      chars.forEach(function (el) { cx.push(el.offsetLeft + el.offsetWidth); });
+    }
+
+    var cl = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var p = function (t, s, d) { return cl((t - s) / d); };
+    var eo = function (v) { return v >= 1 ? 1 : 1 - Math.pow(2, -10 * v); };                 // ease-out-expo
+    var io = function (v) { return v < .5 ? 16 * v * v * v * v * v : 1 - Math.pow(-2 * v + 2, 5) / 2; }; // in-out-quint
+    var bk = function (v) { var c = 1.35, u = v - 1; return 1 + (c + 1) * u * u * u + c * u * u; };      // slight overshoot
+    var r3 = function (v) { return Math.round(v * 1000) / 1000; };
+    function set(el, o, tf) { el.style.opacity = r3(o); if (tf !== undefined) el.style.transform = tf; }
+    var tr = function (x, y, sx, sy) { return 'translate(' + r3(x) + 'px,' + r3(y) + 'px) scale(' + r3(sx) + ',' + r3(sy === undefined ? sx : sy) + ')'; };
+    // transform that moves base box b onto the rect interpolated between a and c
+    function morph(b, a, c, v) {
+      var x = a.x + (c.x - a.x) * v, y = a.y + (c.y - a.y) * v, w = a.w + (c.w - a.w) * v, h = a.h + (c.h - a.h) * v;
+      return tr(x - b.x, y - b.y, w / b.w, h / b.h);
+    }
+    var rise = function (a, d) { return tr(0, (1 - a) * d, 1); };
+
+    function frame(t) {
+      var L = LAY[mode], out = eo(p(t, 9.4, .55)), live = 1 - out, i, k, a;
+
+      // 1. type the address, then the brand is ready
+      var n = Math.floor(p(t, .4, 1.05) * N + 1e-6);
+      chars.forEach(function (el, j) { el.style.opacity = j < n ? r3(live) : 0; });
+      ph.style.opacity = n > 0 ? r3(out) : 1;
+      var blink = (t * 1.8) % 1 < .55 ? 1 : 0, typing = t > .4 && t < 1.5;
+      set(caret, t > 9.4 ? out * blink : (typing ? 1 : blink) * (1 - p(t, 1.7, .2)), 'translateX(' + (t > 9.4 ? 0 : cx[n]) + 'px)');
+      ring.style.opacity = r3(eo(p(t, .2, .35)) * (1 - eo(p(t, 1.6, .5))));
+      a = eo(p(t, 1.6, .5)); set(E.logo, a * live, tr(0, (1 - a) * 6, .9 + .1 * a));
+      for (i = 0; i < 3; i++) { a = eo(p(t, 1.68 + i * .07, .5)); set(E['sw' + i], a * live, rise(a, 6)); }
+      a = p(t, 1.98, .5); set(E.ready, eo(a) * live, tr((1 - bk(a)) * (RTL ? -10 : 10), 0, 1));
+
+      // 2. tabs and idea cards stack in, three get ticked
+      for (i = 0; i < 3; i++) { a = eo(p(t, 2.25 + i * .08, .5)); set(E['tab' + i], a * live, rise(a, 8)); }
+      var dim = eo(p(t, 4.45, .5)), back = eo(p(t, 7.3, .7));
+      qa('.hm-card').forEach(function (el) {
+        var key = el.dataset.k, c = +key.charAt(4), r = +key.charAt(6), pk = +el.dataset.pick;
+        var e = eo(p(t, 2.45 + (r * 3 + c) * .07, .55)), b = B[key];
+        if (pk < 0) { set(el, e * (1 - dim * (1 - .5 * back)) * live, tr(0, (1 - e) * 14, 1)); return; }
+        var tk = p(t, 3.5 + pk * .3, .45), m = eo(p(t, 4.5 + pk * .14, .7));
+        q(el, '.hm-on').style.opacity = r3(eo(tk));
+        set(q(el, '.hm-ok'), eo(tk), 'scale(' + r3(.5 + .5 * bk(tk)) + ')');
+        set(el, e * (1 - eo(p(t, 4.5 + pk * .14, .3))) * live, m > 0 ? morph(b, b, B['post' + pk], m) : tr(0, (1 - e) * 14, 1));
+      });
+
+      // 3 + 4. ticked ideas become posts, then slot into the week and publish
+      for (k = 0; k < 3; k++) {
+        var s = 4.5 + k * .14, m2 = eo(p(t, s, .7)), fly = io(p(t, 6.1 + k * .28, .75));
+        var pb = B['post' + k], cb = B['card' + PICK[k][0] + '-' + PICK[k][1]], rb = B['row' + k];
+        var th = { x: RTL ? rb.x + rb.w - L.pad - L.thumb : rb.x + L.pad, y: rb.y + (rb.h - L.thumb) / 2, w: L.thumb, h: L.thumb };
+        set(E['post' + k], eo(p(t, s + .04, .4)) * live, fly > 0 ? morph(pb, pb, th, fly) : morph(pb, cb, pb, m2));
+        set(E['ghost' + k], eo(p(t, s, .4)) * live);
+        a = p(t, 6.85 + k * .33, .45);
+        set(q(E['row' + k], '.hm-pub'), eo(a) * live, 'scale(' + r3(.8 + .2 * bk(a)) + ')');
+      }
+      var fan = bk(eo(p(t, 5.25, .7))) * (1 - .6 * io(p(t, 6.38, .75)));
+      fans.forEach(function (el, j) {
+        var d = j ? 1 : -1;
+        el.style.transform = 'translate(' + r3(d * fan * L.post * .2) + 'px,' + r3(fan * L.post * .03) + 'px) rotate(' + r3(d * fan * 8) + 'deg) scale(.9)';
+      });
+      a = p(t, 5.2, .45); set(play, eo(a), 'scale(' + r3(.6 + .4 * bk(a)) + ')');
+      sec.style.opacity = r3(eo(p(t, 5.35, .4)));
+      bar.style.transform = 'scaleX(' + r3(p(t, 5.5, 3.9)) + ')';
+    }
+
+    var T = 0, last = 0, raf = 0, seen = true, manual = false;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function tick(now) {
+      T = (T + Math.min(now - last, 100) / 1000) % D; last = now;
+      frame(T); raf = requestAnimationFrame(tick);
+    }
+    function sync() {
+      var run = seen && !document.hidden && !manual && !reduce.matches;
+      if (run && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+      if (!run && raf) { cancelAnimationFrame(raf); raf = 0; }
+      if (reduce.matches && !manual) frame(T = 9);
+    }
+    // frame-exact export hook: draws the frame for that moment and stops the live clock
+    window.seek = function (s) { manual = true; sync(); layout(); T = ((s % D) + D) % D; frame(T); };
+    window.seek.play = function () { manual = false; sync(); };
+
+    layout(); frame(0);
+    if (/[?&]render\b/.test(location.search)) manual = true;
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { mode = null; layout(); frame(T); });
+    if ('ResizeObserver' in window) new ResizeObserver(function () { layout(); frame(T); }).observe(cq);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { seen = en[0].isIntersecting; sync(); }).observe(cq);
+    document.addEventListener('visibilitychange', sync);
+    reduce.addEventListener && reduce.addEventListener('change', sync);
+    sync();
+  })();
+</script>
