@@ -107,7 +107,7 @@ const fmtIcons = [
             {p.popular && <span class="tag">{c.pricing.popular}</span>}
             <h3>{c.pricing.names[p.id]}</h3>
             <div class="price">
-              <span class="m"><bdi>{p.price}</bdi>{p.id !== 'free' && <small>{c.pricing.per}</small>}</span>
+              <span class="m"><bdi>{p.price}</bdi><small>{c.pricing.per}</small></span>
               {p.yearly && <span class="y"><bdi>{p.yearly}</bdi><small>{c.pricing.perYear}</small></span>}
             </div>
             {p.yearly && <p class="equiv y">{c.pricing.equiv.replace('{n}', p.yearlyPerMonth ?? '')}</p>}

@@ -1,12 +1,11 @@
-// Prices are written here on purpose: the landing never calls /api/plans
-// (the API has no CORS) and must not break when the backend changes.
-// Source of truth: the dashboard's plans table.
-// Free: 4 single posts/month (no carousel, no video);
-// re-check the admin panel (Subscriptions) before publishing in case it was edited.
+// Prices are written here on purpose: the landing never calls the API
+// and must not break when the backend changes.
+// Toman prices for the Iranian site. Yearly = ten months for twelve (same rule as the English site).
+// Free: 4 single posts/month (no carousel, no video).
 export interface Plan {
   id: 'free' | 'starter' | 'pro';
-  price: string; // monthly, USD only; no Toman price has been set yet
-  yearly?: string; // ten months for twelve (plan_prices, migration 0062)
+  price: string; // monthly, Toman
+  yearly?: string;
   yearlyPerMonth?: string;
   popular?: boolean;
   brands: number;
@@ -15,21 +14,21 @@ export interface Plan {
 }
 
 export const plans: Plan[] = [
-  { id: 'free', price: '$0', brands: 1, perWeek: 1 },
+  { id: 'free', price: '۰', brands: 1, perWeek: 1 },
   {
     id: 'starter',
-    price: '$9.99',
-    yearly: '$99',
-    yearlyPerMonth: '$8.25',
+    price: '۱٬۹۹۰٬۰۰۰',
+    yearly: '۱۹٬۹۰۰٬۰۰۰',
+    yearlyPerMonth: '۱٬۶۵۸٬۰۰۰',
     brands: 1,
     perWeek: 3,
     monthly: { single: 10, carousel: 3, video: 2, total: 15 },
   },
   {
     id: 'pro',
-    price: '$19.99',
-    yearly: '$199',
-    yearlyPerMonth: '$16.58',
+    price: '۴٬۹۹۰٬۰۰۰',
+    yearly: '۴۹٬۹۰۰٬۰۰۰',
+    yearlyPerMonth: '۴٬۱۵۸٬۰۰۰',
     popular: true,
     brands: 3,
     perWeek: 7,
