@@ -28,7 +28,7 @@ const fmtIcons = [
 ];
 ---
 <Base c={c}>
-  <div class="nav-outer">
+  <div class="nav-outer" data-area="nav">
     <nav class="nav" aria-label="منوی اصلی">
       <a class="brand" href={c.path}><img src="/logo-mark.png" alt="" width="32" height="30" />ideep</a>
       <div class="nav-links">
@@ -42,7 +42,7 @@ const fmtIcons = [
   </div>
 
   <main>
-    <header class="hero">
+    <header class="hero" data-area="hero">
       <div class="wrap">
         <div class="hero-copy">
           <span class="badge"><span class="nets"><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#2aabee"/><path d="M5.2 11.8l12.4-4.8c.6-.2 1.1.1.9.9l-2.1 9.9c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.3.3-.7.3l.2-3.4 6.2-5.6c.3-.2-.1-.4-.4-.2L8.9 13.5l-3.3-1c-.7-.2-.7-.7.2-1z" fill="#fff"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="igg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ffb23e"/><stop offset=".5" stop-color="#e0457b"/><stop offset="1" stop-color="#7047eb"/></linearGradient></defs><rect width="24" height="24" rx="7" fill="url(#igg)"/><rect x="5.5" y="5.5" width="13" height="13" rx="4" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.7"/><circle cx="16.2" cy="7.8" r="1" fill="#fff"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#1fb58f"/><path d="M12 5.6c-3.8 0-6.6 2.6-6.6 5.9 0 1.9.9 3.5 2.4 4.6l-.5 2.4 2.6-1.3c.7.2 1.4.3 2.1.3 3.8 0 6.6-2.6 6.6-6s-2.8-5.9-6.6-5.9z" fill="#fff"/><circle cx="9.2" cy="11.6" r="1" fill="#1fb58f"/><circle cx="12" cy="11.6" r="1" fill="#1fb58f"/><circle cx="14.8" cy="11.6" r="1" fill="#1fb58f"/></svg><svg class="net" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="12" fill="#f7931e"/><path d="M16.9 13.2H9c.3 1.6 1.6 2.6 3.3 2.6 1.1 0 2-.4 2.7-1.1l1.5 1.2c-1 1.2-2.5 1.9-4.3 1.9-3.1 0-5.4-2.2-5.4-5.3S9 7.2 12 7.2c2.9 0 5 2.1 5 5.2v.8zM9 11.5h5.8c-.3-1.4-1.4-2.4-2.9-2.4S9.4 10.1 9 11.5z" fill="#fff"/></svg><i class="net plus soon">+</i></span>{c.hero.badge}</span>
@@ -112,7 +112,7 @@ const fmtIcons = [
             </div>
             {p.yearly && <p class="equiv y">{c.pricing.equiv.replace('{n}', p.yearlyPerMonth ?? '')}</p>}
             <ul>{c.pricing.features[p.id].map((f) => <li>{f}</li>)}</ul>
-            <a class:list={['btn', p.popular ? 'btn-primary' : 'btn-soft']} href={links.signup}>{p.id === 'free' ? c.pricing.cta : c.pricing.ctaPaid}</a>
+            <a class:list={['btn', p.popular ? 'btn-primary' : 'btn-soft']} href={links.signup} data-plan={p.id}>{p.id === 'free' ? c.pricing.cta : c.pricing.ctaPaid}</a>
           </div>
         ))}
       </div>
@@ -123,7 +123,7 @@ const fmtIcons = [
       <span class="eyebrow">{c.faq.eyebrow}</span><h2>{c.faq.title}</h2>
       <div class="faq-grid">
         <div class="faq-list">
-          {c.faq.items.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+          {c.faq.items.map(([q, a], i) => <details data-faq={i + 1}><summary>{q}</summary><p>{a}</p></details>)}
         </div>
         <div class="faq-art" aria-hidden="true">
           <img class="f1" src={img(1)} alt="" loading="lazy" width="320" height="320" onerror="this.remove()" />
@@ -134,7 +134,7 @@ const fmtIcons = [
       </div>
     </div></section>
 
-    <section class="final"><div class="wrap">
+    <section class="final" data-area="final"><div class="wrap">
       <div class="final-box">
         <div class="final-text"><h2>{c.final.title}</h2><p>{c.final.sub}</p><a class="btn btn-lg" href={links.signup}>{c.final.cta}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="fwd"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
         <div class="final-motion"><HeroMotion c={c} /></div>
@@ -142,7 +142,7 @@ const fmtIcons = [
     </div></section>
   </main>
 
-  <footer><div class="wrap">
+  <footer data-area="footer"><div class="wrap">
     <div class="fcols">
       <div><a class="brand" href={c.path}><img src="/logo-mark.png" alt="" width="32" height="30" />ideep</a><p class="tag">{c.footer.tag}</p></div>
       <div><h4>{c.footer.product}</h4><ul><li><a href="#how">{c.nav.how}</a></li><li><a href="#pricing">{c.nav.pricing}</a></li><li><a href="#faq">{c.nav.faq}</a></li><li><a href={links.login}>{c.nav.login}</a></li></ul></div>
@@ -152,10 +152,55 @@ const fmtIcons = [
     <p class="copy">© {new Date().getFullYear()} {c.footer.rights}</p>
   </div></footer>
 
-  <script is:inline>
+  <script is:inline define:vars={{ app: links.signup.replace(/\/onboarding$/, '') }}>
+    // Analytics: what visitors click and how far they read. Every event names where on the page it came from.
+    (function () {
+      var send = function (name, params) { if (window.gtag) window.gtag('event', name, params); };
+      var areaOf = function (el) { var a = el.closest('[data-area], section[id]'); return a ? a.dataset.area || a.id : 'page'; };
+
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a) return;
+        var href = a.getAttribute('href'), area = areaOf(a), label = a.textContent.trim();
+        if (href.indexOf(app + '/onboarding') === 0) {
+          // signup intent; the plan is set on pricing-card buttons
+          send('signup_click', { area: area, plan: a.dataset.plan || '', link_text: label, billing: document.getElementById('pgrid').dataset.bill });
+        } else if (href.indexOf(app + '/login') === 0) {
+          send('login_click', { area: area });
+        } else if (href.charAt(0) === '#') {
+          send('nav_click', { area: area, target: href.slice(1), link_text: label });
+        } else if (href.indexOf('mailto:') === 0) {
+          send('contact_click', { area: area, method: 'email', address: href.slice(7) });
+        } else if (/\.pdf$/.test(href) || href.indexOf(app) === 0) {
+          send('legal_click', { area: area, link_text: label });
+        }
+      });
+
+      document.querySelectorAll('details[data-faq]').forEach(function (d) {
+        d.addEventListener('toggle', function () {
+          if (d.open) send('faq_open', { question: d.querySelector('summary').textContent.trim(), position: +d.dataset.faq });
+        });
+      });
+
+      // each section counts once per page view, when 40% of it is on screen
+      // (or, for a section taller than the screen, when it fills 40% of the screen)
+      if ('IntersectionObserver' in window) {
+        var seen = {};
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            var area = areaOf(en.target);
+            var shown = en.intersectionRatio >= 0.4 || en.intersectionRect.height >= 0.4 * window.innerHeight;
+            if (shown && !seen[area]) { seen[area] = 1; send('section_view', { section: area }); io.unobserve(en.target); }
+          });
+        }, { threshold: [0, 0.1, 0.2, 0.3, 0.4] });
+        document.querySelectorAll('main > section[id], main > .final').forEach(function (s) { io.observe(s); });
+      }
+    })();
+
     document.querySelectorAll('button[data-bill]').forEach(function (b) {
       b.addEventListener('click', function () {
         document.getElementById('pgrid').dataset.bill = b.dataset.bill;
+        if (window.gtag) window.gtag('event', 'billing_toggle', { billing: b.dataset.bill });
         document.querySelectorAll('button.seg').forEach(function (x) { x.classList.toggle('on', x === b); });
       });
     });

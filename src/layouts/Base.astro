@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import type { Copy } from '../data/fa';
+import { GA_ID } from '../data/site';
 interface Props { c: Copy }
 const { c } = Astro.props;
 const site = (Astro.site ?? new URL('https://ideep.ir')).origin;
@@ -27,6 +28,17 @@ const og = new URL('/og.jpg', site).href;
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="theme-color" content="#7047eb" />
+    {GA_ID && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script is:inline define:vars={{ GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { dataLayer.push(arguments); };
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+        </script>
+      </>
+    )}
   </head>
   <body><slot /></body>
 </html>

@@ -9,5 +9,7 @@ export const links = {
   support: 'mailto:support@ideep.app',
   privacyMail: 'mailto:privacy@ideep.app',
 };
+// Google Analytics 4 measurement ID (set PUBLIC_GA_ID to override, or to an empty string to turn it off).
+export const GA_ID = import.meta.env.PUBLIC_GA_ID ?? 'G-DXMKHXZLY1';
 // Generated post images live in public/images/p1.jpg ... p11.jpg (see IMAGES.md).
 export const img = (n: number) => `/images/p${n}.jpg`;
